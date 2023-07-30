@@ -1,0 +1,41 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simple Chatbot</title>
+</head>
+<body>
+  <h1>Simple Chatbot</h1>
+  <div id="chatbox"></div>
+  <input type="text" id="messageInput" placeholder="Type your message...">
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    
+    const chatbox = document.getElementById('chatbox');
+    const message = document.getElementById('messageInput');
+
+    const socket = new WebSocket('ws://localhost:3000');
+
+    socket.onopen = (event) =>{
+      chatbox.innerHTML +='<p> Bot: Chat with me ..!</p>';
+    };
+
+    messageInput.addEventListner('keypress', (event)=>{
+      if(event.key ==='Enter'){
+        const message = messageInput.value;
+        chatbox.innerHTML += '<p>You: ${message} </p>';
+        socket.send(message);
+        messageInput.value = '';
+      }
+    });
+
+    socket.onmessage = (event) =>{
+      const response =  event.data;
+      chatbox.innerHTML += '<p>ChatBot: ${response}<p/>';
+    };
+
+  </script>
+</body>
+</html>
